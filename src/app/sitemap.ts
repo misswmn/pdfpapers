@@ -4,6 +4,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pdfpapers.com";
 
 const routes = [
   "/",
+  "/studio",
   "/generator",
   "/printables/free-printable-graph-paper-a4",
   "/printables/custom-cornell-notes-pdf-pink",

@@ -17,6 +17,13 @@ const bundles = [
   { title: "Academic Field Kit", description: "Cornell, reading logs, essay maps, and revision sheets.", price: "$9", className: "bundle-ink", labels: ["THESIS", "SOURCE", "IDEA"] },
 ];
 
+const personalized = [
+  { title: "Daily focus", note: "Priorities, time blocks and breathing room.", template: "daily", mark: "07:00", className: "personal-blue" },
+  { title: "Family routine", note: "Your child's own morning and evening rhythm.", template: "routine", mark: "✓", className: "personal-clay" },
+  { title: "Meal & market", note: "A weekly menu tied to one clean shopping list.", template: "meal", mark: "M—S", className: "personal-sage" },
+  { title: "Study dashboard", note: "Subjects, next actions and a weekly focus.", template: "study", mark: "01", className: "personal-ink" },
+];
+
 const faqs = [
   ["Are the paper generators really free?", "Yes. Every generator is free to customize and download, with no account, watermark, or usage limit."],
   ["How do I print PDF paper at the right size?", "Choose Actual size or 100% in your printer dialog. Turn off Fit to page so millimeter spacing stays precise."],
@@ -34,12 +41,26 @@ export default function Home() {
           <h1>Design your perfect page. <em>Print. Write.</em></h1>
           <p className="hero-lede">Free, precise paper generators for the way you think — plus beautifully made planning systems when you want more.</p>
           <div className="hero-actions">
-            <Link className="button button-primary" href="/generator">Launch free generator <span aria-hidden="true">↗</span></Link>
-            <a className="text-link" href="#premium">Explore premium <span aria-hidden="true">↓</span></a>
+            <Link className="button button-primary" href="/studio">Open personal studio <span aria-hidden="true">↗</span></Link>
+            <a className="text-link" href="#generators">Use paper generator <span aria-hidden="true">↓</span></a>
           </div>
           <p className="quiet-note"><span /> No account. No watermark. Always free.</p>
         </div>
         <PaperStack />
+      </section>
+
+      <section className="personal-section" id="personalize">
+        <div className="shell personal-intro">
+          <div><p className="eyebrow">NEW · PERSONAL STUDIO</p><h2>Not another template.<br /><em>Your</em> template.</h2></div>
+          <div><p>Start with a complete design, then change the title, name, labels, palette, typography, size, and orientation. No design software—and no one else&apos;s name on the page.</p><Link className="text-link" href="/studio">Open the studio ↗</Link></div>
+        </div>
+        <div className="shell personal-grid">
+          {personalized.map((product, index) => <Link href={`/studio?template=${product.template}`} className={`personal-card ${product.className}`} key={product.title}>
+            <div className="personal-sheet"><span className="personal-owner">MADE FOR YOU</span><strong>{product.mark}</strong><i /><i /><i /></div>
+            <div className="personal-copy"><span>0{index + 1}</span><div><h3>{product.title}</h3><p>{product.note}</p></div><b>↗</b></div>
+          </Link>)}
+        </div>
+        <div className="shell personal-proof"><span>EDITABLE TEXT</span><span>4 COLOR STORIES</span><span>A4 · A5 · LETTER</span><span>PORTRAIT · LANDSCAPE</span><span>INSTANT VECTOR PDF</span></div>
       </section>
 
       <section className="tool-section" id="generators">
@@ -48,7 +69,7 @@ export default function Home() {
             <p className="eyebrow">FREE GENERATORS</p>
             <h2>Start with a blank page.</h2>
           </div>
-          <p>Set the size, spacing, weight, and color. What you see is exactly what lands on the paper.</p>
+          <p>Need a precise blank rather than a finished layout? Set the size, spacing, weight, and color here.</p>
         </div>
         <div className="shell tool-grid">
           {tools.map((tool, index) => (
@@ -99,8 +120,8 @@ export default function Home() {
       </section>
 
       <footer>
-        <div className="shell footer-top"><div className="footer-mark"><span>pdf</span>papers</div><p>Better paper for clearer thinking.</p><Link className="button button-light" href="/generator">Make a page ↗</Link></div>
-        <div className="shell footer-bottom"><span>© 2026 pdfpapers</span><nav><a href="#generators">Generators</a><a href="#premium">Premium</a><a href="#guide">Printing guide</a></nav><span>Made for pencils, pens & pixels.</span></div>
+        <div className="shell footer-top"><div className="footer-mark"><span>pdf</span>papers</div><p>Better paper, made personal.</p><Link className="button button-light" href="/studio">Make yours ↗</Link></div>
+        <div className="shell footer-bottom"><span>© 2026 pdfpapers</span><nav><Link href="/studio">Personal studio</Link><a href="#generators">Generators</a><a href="#premium">Collections</a></nav><span>Made for pencils, pens & pixels.</span></div>
       </footer>
     </main>
   );

@@ -21,14 +21,14 @@ export const metadata: Metadata = {
     default: "pdfpapers — Free Custom Printable Paper",
     template: "%s | pdfpapers",
   },
-  description: "Create precise graph, lined, dot grid, and Cornell paper PDFs for free. Customize size, spacing, weight, and color in your browser.",
-  keywords: ["printable paper", "graph paper PDF", "lined paper", "Cornell notes template", "paper generator"],
+  description: "Create personalized planners, family routines, study pages, and precise printable paper PDFs in your browser.",
+  keywords: ["personalized printable", "printable planner", "custom routine chart", "graph paper PDF", "paper generator"],
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "Design your perfect page",
-    description: "Free custom printable paper generators.",
+    description: "Personalize planners, routines, study pages, and precise printable paper.",
     type: "website",
     url: "/",
     siteName: "pdfpapers",
