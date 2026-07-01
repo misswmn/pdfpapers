@@ -1,0 +1,13 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Header } from "@/components/header";
+import { GeneratorWorkspace, type PaperType } from "@/components/generator-workspace";
+
+const pages: Record<string,{title:string;description:string;h1:string;type:PaperType;guide:string}> = {
+  "free-printable-graph-paper-a4": { title:"Free Printable Graph Paper A4 PDF", description:"Create free A4 graph paper with custom square spacing, line weight, and color.", h1:"Free printable A4 graph paper", type:"grid", guide:"A4 graph paper is ideal for mathematics, technical sketches, bullet journaling, and measured layouts. Start with 5 mm spacing for general-purpose work, or increase it to 7–10 mm for early learners and larger handwriting. Keep printer scaling at 100% to preserve exact measurements." },
+  "custom-cornell-notes-pdf-pink": { title:"Custom Pink Cornell Notes PDF", description:"Make a soft pink Cornell notes page and download a print-ready PDF.", h1:"Custom pink Cornell notes paper", type:"cornell", guide:"Cornell paper divides each page into notes, cues, and a summary. Record ideas in the large notes field, add prompts or keywords in the narrow cue column, then compress the lesson into a few sentences at the bottom. Reviewing cues before rereading your notes turns a passive page into an active recall tool." },
+  "weekly-planner-template-minimalist": { title:"Minimalist Weekly Planner Template PDF", description:"Build a clean weekly planner and download it as a free printable PDF.", h1:"Minimalist weekly planner template", type:"weekly", guide:"A single-page weekly plan works best when it stays selective. Give each day one important outcome before listing smaller tasks. Print at actual size for a crisp layout, or import the PDF into GoodNotes and duplicate the page at the start of every week." },
+};
+export function generateStaticParams(){ return Object.keys(pages).map(slug=>({slug})); }
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params,p=pages[slug];return p?{title:p.title,description:p.description}:{title:"Printable not found"};}
+export default async function PrintablePage({params}:{params:Promise<{slug:string}>}){const {slug}=await params,p=pages[slug];if(!p)notFound();return <main className="generator-page"><Header/><div className="generator-shell"><div className="seo-intro"><p className="eyebrow">FREE PRINTABLE</p><h1>{p.h1}</h1><p>{p.description}</p></div><GeneratorWorkspace initialType={p.type}/><article className="seo-guide"><p className="eyebrow">PRINTING & USE GUIDE</p><h2>Make this page work harder.</h2><p>{p.guide}</p></article></div></main>}
