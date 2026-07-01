@@ -18,10 +18,10 @@ const bundles = [
 ];
 
 const personalized = [
-  { title: "Daily focus", note: "Priorities, time blocks and breathing room.", template: "daily", mark: "07:00", className: "personal-blue" },
-  { title: "Family routine", note: "Your child's own morning and evening rhythm.", template: "routine", mark: "✓", className: "personal-clay" },
-  { title: "Meal & market", note: "A weekly menu tied to one clean shopping list.", template: "meal", mark: "M—S", className: "personal-sage" },
-  { title: "Study dashboard", note: "Subjects, next actions and a weekly focus.", template: "study", mark: "01", className: "personal-ink" },
+  { title: "Budget planner", note: "Zero-based monthly money map with debt and savings.", template: "budget", href: "/printables/printable-budget-planner-pdf", mark: "$0", className: "personal-blue" },
+  { title: "ADHD planner", note: "A low-friction page for overwhelm, resets, and follow-through.", template: "adhd", href: "/printables/adhd-planner-printable-pdf", mark: "3", className: "personal-clay" },
+  { title: "Teacher planner", note: "Weekly lessons, materials, and assessment notes.", template: "teacher", href: "/printables/teacher-planner-printable-pdf", mark: "WK", className: "personal-sage" },
+  { title: "Nurse shift sheet", note: "Patient notes, meds, and handoff cues in one page.", template: "nurse", href: "/printables/nurse-shift-sheet-printable-pdf", mark: "RN", className: "personal-ink" },
 ];
 
 const faqs = [
@@ -55,7 +55,7 @@ export default function Home() {
           <div><p>Start with a complete design, then change the title, name, labels, palette, typography, size, and orientation. No design software—and no one else&apos;s name on the page.</p><Link className="text-link" href="/studio">Open the studio ↗</Link></div>
         </div>
         <div className="shell personal-grid">
-          {personalized.map((product, index) => <Link href={`/studio?template=${product.template}`} className={`personal-card ${product.className}`} key={product.title}>
+          {personalized.map((product, index) => <Link href={product.href} className={`personal-card ${product.className}`} key={product.title}>
             <div className="personal-sheet"><span className="personal-owner">MADE FOR YOU</span><strong>{product.mark}</strong><i /><i /><i /></div>
             <div className="personal-copy"><span>0{index + 1}</span><div><h3>{product.title}</h3><p>{product.note}</p></div><b>↗</b></div>
           </Link>)}
@@ -121,7 +121,7 @@ export default function Home() {
 
       <footer>
         <div className="shell footer-top"><div className="footer-mark"><span>pdf</span>papers</div><p>Better paper, made personal.</p><Link className="button button-light" href="/studio">Make yours ↗</Link></div>
-        <div className="shell footer-bottom"><span>© 2026 pdfpapers</span><nav><Link href="/studio">Personal studio</Link><a href="#generators">Generators</a><a href="#premium">Collections</a></nav><span>Made for pencils, pens & pixels.</span></div>
+        <div className="shell footer-bottom"><span>© 2026 pdfpapers</span><nav><Link href="/studio">Personal studio</Link><Link href="/#personalize">Printables</Link><a href="#generators">Generators</a><a href="#premium">Collections</a></nav><span>Made for pencils, pens & pixels.</span></div>
       </footer>
     </main>
   );

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { StudioWorkspace, type StudioTemplate } from "@/components/studio-workspace";
 
-const validTemplates = new Set<StudioTemplate>(["daily", "weekly", "habit", "meal", "routine", "study"]);
+const validTemplates = new Set<StudioTemplate>(["daily", "weekly", "habit", "meal", "routine", "study", "budget", "adhd", "teacher", "student", "nurse", "coach"]);
 
 export const metadata: Metadata = {
   title: "Personalized Printable Design Studio",

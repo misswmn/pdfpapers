@@ -22,7 +22,17 @@ export const metadata: Metadata = {
     template: "%s | pdfpapers",
   },
   description: "Create personalized planners, family routines, study pages, and precise printable paper PDFs in your browser.",
-  keywords: ["personalized printable", "printable planner", "custom routine chart", "graph paper PDF", "paper generator"],
+  keywords: [
+    "personalized printable",
+    "printable planner",
+    "custom routine chart",
+    "graph paper PDF",
+    "paper generator",
+    "budget planner printable",
+    "ADHD planner printable",
+    "teacher planner printable",
+    "nurse shift sheet printable",
+  ],
   alternates: {
     canonical: "/",
   },

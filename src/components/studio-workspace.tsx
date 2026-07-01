@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 
-export type StudioTemplate = "daily" | "weekly" | "habit" | "meal" | "routine" | "study";
+export type StudioTemplate = "daily" | "weekly" | "habit" | "meal" | "routine" | "study" | "budget" | "adhd" | "teacher" | "student" | "nurse" | "coach";
 type SizeName = "A4" | "A5" | "Letter";
 type Orientation = "portrait" | "landscape";
 type FontStyle = "clean" | "editorial" | "mono";
@@ -35,6 +35,12 @@ export const studioTemplates: Record<StudioTemplate, { name: string; note: strin
   meal: { name: "Meal & market", note: "Weekly menu and shopping list", title: "At our table", subtitle: "A simple week of good food", items: ["Vegetables", "Fruit", "Pantry", "Protein", "Dairy", "Household"] },
   routine: { name: "Family routine", note: "Morning and evening checklists", title: "Milo's rhythm", subtitle: "A happy little plan for every day", items: ["Get dressed", "Brush teeth", "Pack bag", "Tidy toys", "Choose tomorrow's clothes", "Story time"] },
   study: { name: "Study dashboard", note: "Subjects, focus and review", title: "Study map", subtitle: "Turn the syllabus into small steps", items: ["Mathematics", "Biology", "Literature", "History", "Languages"] },
+  budget: { name: "Budget planner", note: "Zero-based monthly money map", title: "Money map", subtitle: "Plan every dollar before it leaves", items: ["Income", "Fixed bills", "Variable spending", "Debt payment", "Savings", "Buffer"] },
+  adhd: { name: "ADHD planner", note: "Low-friction planning with rewards", title: "Steady steps", subtitle: "Less overwhelm, more follow-through", items: ["Top 3", "Tiny next step", "Body double", "Reward", "Reset", "Done list"] },
+  teacher: { name: "Teacher planner", note: "Lessons, prep and class notes", title: "Lesson map", subtitle: "A calmer week in the classroom", items: ["Lesson focus", "Materials", "Homework", "Assessment", "Parent contact", "Notes"] },
+  student: { name: "Student planner", note: "Assignments, deadlines and GPA", title: "Semester plan", subtitle: "Turn the term into milestones", items: ["Classes", "Deadlines", "Reading", "Exam prep", "GPA", "Office hours"] },
+  nurse: { name: "Nurse shift sheet", note: "Report sheet for a full shift", title: "Shift report", subtitle: "Track the day without losing the thread", items: ["Patients", "Meds", "Vitals", "Tasks", "Handoff", "Notes"] },
+  coach: { name: "Client tracker", note: "Progress, sessions and follow-ups", title: "Client tracker", subtitle: "Keep every account moving forward", items: ["Client goal", "Session plan", "Progress", "Homework", "Follow-up", "Payment"] },
 };
 
 const mmToPt = (mm: number) => (mm * 72) / 25.4;
@@ -135,6 +141,157 @@ function createDesign({ width, height, template, title, subtitle, owner, items, 
       c.push({ kind: "text", x: split + 6, y, text: truncate(item, 16), size: 2.9, color: palette.ink, weight: "bold", font });
       for (let ly = y + 5; ly < y + 19 && ly < bottom; ly += 6) line(split + 6, ly, width - m, ly);
     });
+  }
+
+  if (template === "budget") {
+    const split = m + innerW * 0.58;
+    label("Budget plan", m, top);
+    label("Zero-based checklist", split + 6, top);
+    line(split, top - 4, split, bottom);
+    const rowH = (bottom - top - 8) / 7;
+    ["Income", "Rent / housing", "Food / household", "Bills", "Debt", "Savings", "Buffer"].forEach((item, i) => {
+      const y = top + 7 + i * rowH;
+      c.push({ kind: "text", x: m, y: y + 5, text: truncate(item, 20), size: 3.1, color: palette.ink, weight: i === 0 ? "bold" : undefined, font });
+      line(m + 42, y + 2, split - 5, y + 2);
+    });
+    c.push({ kind: "rect", x: split + 6, y: top + 8, width: innerW - (split - m) - 6, height: 18, fill: palette.soft, radius: 1.5 });
+    c.push({ kind: "text", x: split + 11, y: top + 19, text: "LEFT TO BUDGET", size: 2.9, color: palette.ink, weight: "bold", font: "mono" });
+    const rightItems = ["Savings target", "Debt snowball", "Sinking funds", "Irregular bills", "Subscriptions", "Needs / wants"];
+    rightItems.forEach((item, i) => {
+      const y = top + 34 + i * ((bottom - top - 42) / 6);
+      c.push({ kind: "circle", x: split + 10, y: y - 1, radius: 2.4, stroke: palette.accent });
+      c.push({ kind: "text", x: split + 16, y, text: truncate(item, 22), size: 3, color: palette.ink, font });
+      line(split + 16, y + 4, width - m - 4, y + 4);
+    });
+    label("Next pay cycle", split + 6, bottom - 22);
+    line(split + 6, bottom - 15, width - m, bottom - 15);
+  }
+
+  if (template === "adhd") {
+    const split = m + innerW * 0.56;
+    label("Top 3", m, top);
+    label("Brain dump", split + 6, top);
+    line(split, top - 4, split, bottom);
+    c.push({ kind: "rect", x: m, y: top + 7, width: split - m - 5, height: 17, fill: palette.soft, radius: 1.4 });
+    c.push({ kind: "text", x: m + 6, y: top + 18, text: "ONE SMALL WIN", size: 2.9, color: palette.ink, weight: "bold", font: "mono" });
+    const scheduleY = top + 31;
+    for (let i = 0; i < 8; i++) {
+      const y = scheduleY + i * 11.5;
+      c.push({ kind: "text", x: m, y: y + 1, text: `${String(i + 8).padStart(2, "0")}:00`, size: 2.6, color: palette.ink, font: "mono" });
+      line(m + 14, y, split - 5, y);
+    }
+    items.slice(0, 3).forEach((item, i) => {
+      const y = top + 9 + i * 15;
+      c.push({ kind: "circle", x: split + 8, y: y - 1, radius: 2.7, stroke: palette.accent });
+      c.push({ kind: "text", x: split + 8, y, text: String(i + 1), size: 2.4, color: palette.accent, weight: "bold", anchor: "middle" });
+      c.push({ kind: "text", x: split + 14, y, text: truncate(item, 18), size: 3.1, color: palette.ink, font });
+      line(split + 14, y + 4, width - m, y + 4);
+    });
+    label("Reward / reset", split + 6, top + 60);
+    line(split + 6, top + 67, width - m, top + 67);
+    for (let y = top + 74; y < bottom; y += 9) line(split + 6, y, width - m, y);
+  }
+
+  if (template === "teacher") {
+    label("Lesson map", m, top);
+    label("Week at a glance", width - m, top, "end");
+    const cols = 5, gap = 3, gridTop = top + 8, cardW = (innerW - gap * (cols - 1)) / cols, cardH = 45;
+    ["MON", "TUE", "WED", "THU", "FRI"].forEach((day, i) => {
+      const x = m + i * (cardW + gap);
+      c.push({ kind: "rect", x, y: gridTop, width: cardW, height: cardH, fill: i % 2 === 0 ? palette.soft : undefined, stroke: lineColor, radius: 1.4 });
+      c.push({ kind: "text", x: x + 4, y: gridTop + 7, text: day, size: 2.7, color: palette.accent, weight: "bold", font: "mono" });
+      c.push({ kind: "text", x: x + 4, y: gridTop + 17, text: "Objective", size: 2.5, color: palette.ink, weight: "bold", font });
+      c.push({ kind: "text", x: x + 4, y: gridTop + 27, text: "Materials", size: 2.4, color: palette.ink, font });
+      c.push({ kind: "text", x: x + 4, y: gridTop + 37, text: "Exit ticket", size: 2.4, color: palette.ink, font });
+    });
+    const lowerTop = gridTop + 53;
+    const split = m + innerW * 0.62;
+    label("Prep list", m, lowerTop);
+    label("Assessment notes", split + 6, lowerTop);
+    line(split, lowerTop - 4, split, bottom);
+    const prepItems = ["Copies", "Slides", "Handouts", "Station setup", "Differentiation", "Homework"];
+    prepItems.forEach((item, i) => {
+      const y = lowerTop + 9 + i * 11;
+      c.push({ kind: "circle", x: m + 2.5, y: y - 1, radius: 2.2, stroke: palette.accent });
+      c.push({ kind: "text", x: m + 8, y, text: item, size: 3, color: palette.ink, font });
+      line(m + 16, y + 4, split - 5, y + 4);
+    });
+    for (let y = lowerTop + 8; y < bottom; y += 8) line(split + 6, y, width - m, y);
+  }
+
+  if (template === "student") {
+    const split = m + innerW * 0.57;
+    label("Classes", m, top);
+    label("Deadlines", split + 6, top);
+    line(split, top - 4, split, bottom);
+    const classH = (bottom - top - 8) / 6;
+    items.slice(0, 5).forEach((item, i) => {
+      const y = top + 7 + i * classH;
+      c.push({ kind: "text", x: m, y: y + 5, text: truncate(item, 20), size: 3.2, color: palette.ink, weight: "bold", font });
+      c.push({ kind: "text", x: m + 40, y: y + 5, text: "Lecture", size: 2.5, color: palette.accent, font: "mono" });
+      line(m, y + classH, split - 5, y + classH);
+    });
+    c.push({ kind: "rect", x: split + 6, y: top + 8, width: innerW - (split - m) - 6, height: 18, fill: palette.soft, radius: 1.4 });
+    c.push({ kind: "text", x: split + 11, y: top + 19, text: "GPA TARGET", size: 2.9, color: palette.ink, weight: "bold", font: "mono" });
+    const deadlineLabels = ["Assignment", "Due", "Weight"];
+    deadlineLabels.forEach((labelText, i) => {
+      c.push({ kind: "text", x: split + 6 + i * 22, y: top + 35, text: labelText, size: 2.3, color: palette.accent, weight: "bold", font: "mono" });
+    });
+    for (let r = 0; r < 4; r++) {
+      const y = top + 40 + r * 18;
+      line(split + 6, y, width - m, y);
+      c.push({ kind: "text", x: split + 6, y: y - 3, text: `Task ${r + 1}`, size: 3, color: palette.ink, font });
+    }
+    label("Study blocks", split + 6, bottom - 22);
+    line(split + 6, bottom - 15, width - m, bottom - 15);
+  }
+
+  if (template === "nurse") {
+    const split = m + innerW * 0.56;
+    label("Patient list", m, top);
+    label("Handoff notes", split + 6, top);
+    line(split, top - 4, split, bottom);
+    const rows = 4;
+    const rowH = (bottom - top - 12) / rows;
+    for (let r = 0; r < rows; r++) {
+      const y = top + 8 + r * rowH;
+      c.push({ kind: "rect", x: m, y, width: split - m - 5, height: rowH - 2, fill: r % 2 === 0 ? palette.soft : undefined, stroke: lineColor, radius: 1.2 });
+      c.push({ kind: "text", x: m + 5, y: y + 6, text: `Room ${101 + r}`, size: 2.8, color: palette.accent, weight: "bold", font: "mono" });
+      c.push({ kind: "text", x: m + 5, y: y + 15, text: "Vitals / meds / tasks", size: 2.6, color: palette.ink, font });
+    }
+    const rightItems = ["Meds due", "PRN", "Labs", "Mobility", "Family update", "Escalation"];
+    rightItems.forEach((item, i) => {
+      const y = top + 10 + i * ((bottom - top - 15) / 6);
+      c.push({ kind: "circle", x: split + 8, y: y - 1, radius: 2.5, stroke: palette.accent });
+      c.push({ kind: "text", x: split + 14, y, text: item, size: 3, color: palette.ink, font });
+      line(split + 14, y + 4, width - m, y + 4);
+    });
+    label("Shift summary", split + 6, bottom - 22);
+    line(split + 6, bottom - 15, width - m, bottom - 15);
+  }
+
+  if (template === "coach") {
+    const split = m + innerW * 0.57;
+    label("Client tracker", m, top);
+    label("Follow-up plan", split + 6, top);
+    line(split, top - 4, split, bottom);
+    const rows = 5;
+    const rowH = (bottom - top - 8) / rows;
+    items.slice(0, 5).forEach((item, i) => {
+      const y = top + 8 + i * rowH;
+      c.push({ kind: "rect", x: m, y, width: split - m - 5, height: rowH - 2, fill: i % 2 ? palette.soft : undefined, stroke: lineColor, radius: 1.2 });
+      c.push({ kind: "text", x: m + 5, y: y + 6, text: truncate(item, 18), size: 3.2, color: palette.ink, weight: "bold", font });
+      c.push({ kind: "text", x: m + 5, y: y + 14, text: "Goal / current / next step", size: 2.5, color: palette.accent, font: "mono" });
+    });
+    const followUps = ["Check-in", "Homework", "Nutrition", "Training split", "Progress photo", "Payment"];
+    followUps.forEach((item, i) => {
+      const y = top + 10 + i * ((bottom - top - 18) / 6);
+      c.push({ kind: "circle", x: split + 8, y: y - 1, radius: 2.5, stroke: palette.accent });
+      c.push({ kind: "text", x: split + 14, y, text: item, size: 3, color: palette.ink, font });
+      line(split + 14, y + 4, width - m, y + 4);
+    });
+    label("Session notes", split + 6, bottom - 22);
+    line(split + 6, bottom - 15, width - m, bottom - 15);
   }
 
   if (template === "routine") {
